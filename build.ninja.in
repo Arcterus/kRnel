@@ -8,10 +8,9 @@ build src/kernel/main.o: rustc src/kernel/main.rs | @DEPENDS@
 # KERNEL BINARY
 build kernel.bin: ld src/boot/arch/@ARCH@/setup.o $
                      src/kernel/main.o $
-                     "-(" install/libcore-c5ed6fb4-0.11.0-pre.rlib "-)" $
-                     "-(" install/librlibc-d1ece24e-0.11.0-pre.rlib "-)"
+                     @RUST_LIBS@
 
-build "-(" "-)": phony
+build '-(' '-)': phony
 
 # COMMANDS
 build run: qemu kRnel.iso

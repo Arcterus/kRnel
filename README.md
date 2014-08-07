@@ -6,7 +6,7 @@ A small 64-bit, Multiboot kernel written in Rust.
 #### Build ####
 * `clang` (capable of cross-compiling for x86-64)
 * `nasm`
-* `rust` (from git)
+* `rust` (nightly)
 * `ninja`
 * `xorriso`
 
@@ -23,20 +23,21 @@ A small 64-bit, Multiboot kernel written in Rust.
 Some distributions have compilers that will work just fine out-of-the-box, while some don't.
 
 ```bash
-$ sudo yaourt -S clang nasm qemu rust-git ninja libisoburn
+$ yaourt -S clang nasm qemu rust-nightly-bin ninja libisoburn
 $ cd path/to/kRnel
 $ ./configure
 $ ninja
 ```
 
 #### OSX ####
-You should use Homebrew for as much as possible.  The configure script
-autogenerates `binutils` for you because OSX has a broken version by default.
-Please note that this assumes you already have `clang` installed via Xcode.
+You should use Homebrew for as much as possible.  However, you should install
+the Rust nightly via the [installer](http://static.rust-lang.org/dist/rust-nightly-x86_64-apple-darwin.pkg).
+The configure script autogenerates `binutils` for you because OSX has a broken
+version by default.  Please note that this assumes you already have `clang`
+installed via Xcode.
 
 ```bash
 $ brew install nasm qemu ninja xorriso
-$ brew install --HEAD rust
 $ cd path/to/kRnel
 $ ./configure
 $ ninja

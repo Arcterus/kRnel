@@ -6,10 +6,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-pub mod reset;
+use core::prelude::*;
+use core::fmt;
 
-#[no_mangle]
-#[inline]
-pub extern "C" fn __morestack() -> ! {
-   super::error::panic("cannot use __morestack from the kernel", file!(), line!())
+pub struct ScreenWriter;
+
+impl fmt::FormatWriter for ScreenWriter {
+   #[inline]
+   fn write(&mut self, bytes: &[u8]) -> fmt::Result {
+      super::print_bytes(bytes);
+      Ok(())
+   }
 }

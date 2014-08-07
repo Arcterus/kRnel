@@ -13,44 +13,46 @@
 
 #![allow(ctypes)]
 #![no_std]
-#![feature(globs)]
-#![feature(asm)]
+#![feature(asm, globs, macro_rules, phase)]
 
+#[phase(plugin, link)]
 extern crate core;
+extern crate rand;
 extern crate rlibc;
+extern crate unicode;
 
 pub use core::prelude::*;
 
-pub use drivers::io::console;
+pub use drivers::console;
 pub use platform::*;
+
+pub use std = core;
+
+use core::fmt::FormatWriter;
 
 #[cfg(target_arch = "x86_64")]
 #[path = "arch/x86_64/mod.rs"]
 pub mod platform;
 
-#[path = "../drivers"]
-pub mod drivers {
-	pub mod io {
-		pub mod console;
-	}
-}
-
+#[path = "../drivers/mod.rs"]
+pub mod drivers;
 pub mod memory;
 pub mod error;
 pub mod support;
 
 #[no_mangle]
-pub fn main(mem: *memory::BootMemMap) {
-	let mem: &memory::BootMemMap = unsafe { &(*mem) };
-	console::clear_screen();
-	console::print("iiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\x08\x08\x08\x08\x08test");
-	console::println("");
-	let usable = mem.usable();
-	let mut len = usable.len();
-	while len > 0 {
-		unsafe { console::print_bytes([(len % 10 + '0' as uint) as u8, 0].as_ptr()); }
-		len /= 10;
-		console::println("");
-	}
-	//error::panic("End of kernel");
+pub fn main(mem: *const memory::BootMemMap) {
+   let mem: &memory::BootMemMap = unsafe { &(*mem) };
+   console::clear_screen();
+   console::print("iiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\x08\x08\x08\x08\x08test");
+   console::println("");
+   let usable = mem.usable();
+   let mut len = usable.len();
+   while len > 0 {
+      console::print_bytes([(len % 10 + '0' as uint) as u8]);
+      len /= 10;
+      console::println("");
+   }
+   //error::panic("End of kernel", file!(), line!());
+   //write!(console::default_screen(), "{}", 1u);
 }

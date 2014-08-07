@@ -5,7 +5,7 @@ rustflags = $rustlibflags -L install --emit=bc --crate-type=rlib
 ldflags = -T linker.ld -nodefaultlibs -melf_x86_64 -z max-page-size=0x1000
 asmflags = -f elf64
 
-rustc = install/bin/rustc
+rustc = rustc
 ld = ld
 cc = clang
 asm = nasm
@@ -15,14 +15,20 @@ xorriso = xorriso
 rule rustc
    command = $rustc $rustflags -o $out.bc $in && $
              $cc $cflags -o $out $out.bc && rm $out.bc
+   depfile = $out.d
+   deps = gcc
    description = RUSTC $out
 
 rule rustc_lib
    command = $rustc $rustlibflags -o $out $in
+   depfile = $out.d
+   deps = gcc
    description = RUSTC_LIB $out
 
 rule cc
    command = $cc $cflags -o $out $in
+   depfile = $out.d
+   deps = gcc
    description = CC $out
 
 rule asm

@@ -6,10 +6,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-pub mod reset;
+pub use self::io::console;
 
-#[no_mangle]
-#[inline]
-pub extern "C" fn __morestack() -> ! {
-   super::error::panic("cannot use __morestack from the kernel", file!(), line!())
-}
+pub mod io;
